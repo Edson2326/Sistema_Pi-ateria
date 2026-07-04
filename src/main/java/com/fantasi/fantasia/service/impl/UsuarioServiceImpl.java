@@ -25,9 +25,16 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public Usuario guardar(Usuario usuario) {
 
-        usuario.setPassword(
-                passwordEncoder.encode(usuario.getPassword())
-        );
+        if (usuario.getId() != null && (usuario.getPassword() == null || usuario.getPassword().isBlank())) {
+            // Edición sin cambiar la contraseña: conservamos la actual
+            Usuario existente = repo.findById(usuario.getId())
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+            usuario.setPassword(existente.getPassword());
+        } else {
+            usuario.setPassword(
+                    passwordEncoder.encode(usuario.getPassword())
+            );
+        }
 
         return repo.save(usuario);
     }

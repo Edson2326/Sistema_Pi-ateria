@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security6">
 <head>
     <title>Reportes - Piñatería Paraíso de la Fantasía</title>
     <link rel="icon" href="img/LogoPinateria.png" type="image/x-icon">
@@ -48,7 +48,8 @@
         .nav-pill { display:inline-flex; align-items:center; gap:7px; font-size:.875rem; font-weight:700; color:rgba(255,255,255,.65); padding:6px 13px; border-radius:50px; text-decoration:none; transition:background .2s,color .2s; }
         .nav-pill:hover { background:rgba(255,255,255,.13); color:#fff; }
         .nav-pill .ndot { width:26px; height:26px; border-radius:8px; background:rgba(255,255,255,.12); display:inline-flex; align-items:center; justify-content:center; font-size:12px; }
-        .nav-user { font-size:.82rem; font-weight:800; color:rgba(255,255,255,.55); display:flex; align-items:center; gap:6px; }
+        .nav-user { font-size:.82rem; font-weight:800; color:rgba(255,255,255,.55); display:flex; align-items:center; gap:6px; text-decoration:none; cursor:default; }
+        a.nav-user { cursor:pointer; }
         .nav-user i { color:var(--p400); }
         .btn-exit { font-size:.82rem; font-weight:800; background:rgba(255,255,255,.09); border:1.5px solid rgba(255,255,255,.2); color:rgba(255,255,255,.8); padding:5px 16px; border-radius:50px; cursor:pointer; transition:all .2s; }
         .btn-exit:hover { background:rgba(255,255,255,.18); border-color:rgba(255,255,255,.4); color:#fff; }
@@ -178,12 +179,13 @@
             <ul class="navbar-nav mx-auto gap-1 mt-3 mt-lg-0">
                 <li class="nav-item"><a class="nav-pill" th:href="@{/ventas/nueva}"><span class="ndot"><i class="fa-solid fa-cash-register"></i></span>Ventas</a></li>
                 <li class="nav-item"><a class="nav-pill" th:href="@{/productos}"><span class="ndot"><i class="fa-solid fa-box"></i></span>Inventario</a></li>
-                <li class="nav-item"><a class="nav-pill" th:href="@{/pedidos/lista}"><span class="ndot"><i class="fa-solid fa-gift"></i></span>Pedidos</a></li>
-                <li class="nav-item"><a class="nav-pill" th:href="@{/clientes}"><span class="ndot"><i class="fa-solid fa-users"></i></span>Clientes</a></li>
-                <li class="nav-item"><a class="nav-pill" th:href="@{/reportes}"><span class="ndot"><i class="fa-solid fa-chart-line"></i></span>Reportes</a></li>
+                <li class="nav-item" sec:authorize="hasRole('ADMINISTRADOR')"><a class="nav-pill" th:href="@{/pedidos/lista}"><span class="ndot"><i class="fa-solid fa-gift"></i></span>Pedidos</a></li>
+                <li class="nav-item" sec:authorize="hasRole('ADMINISTRADOR')"><a class="nav-pill" th:href="@{/clientes}"><span class="ndot"><i class="fa-solid fa-users"></i></span>Clientes</a></li>
+                <li class="nav-item" sec:authorize="hasRole('ADMINISTRADOR')"><a class="nav-pill" th:href="@{/reportes}"><span class="ndot"><i class="fa-solid fa-chart-line"></i></span>Reportes</a></li>
             </ul>
             <div class="d-flex align-items-center gap-3 mt-3 mt-lg-0">
-                <span class="nav-user"><i class="fa-solid fa-circle-user"></i> Admin</span>
+                <a class="nav-user" th:href="@{/usuarios}" sec:authorize="hasRole('ADMINISTRADOR')" title="Gestionar usuarios"><i class="fa-solid fa-user-gear"></i> <span sec:authentication="name">Admin</span></a>
+                <span class="nav-user" sec:authorize="hasRole('VENDEDOR')"><i class="fa-solid fa-circle-user"></i> <span sec:authentication="name">Empleado</span></span>
                 <form th:action="@{/logout}" method="post" class="m-0">
                     <button type="submit" class="btn-exit">Salir <i class="fa-solid fa-arrow-right-from-bracket ms-1"></i></button>
                 </form>
@@ -284,4 +286,3 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-

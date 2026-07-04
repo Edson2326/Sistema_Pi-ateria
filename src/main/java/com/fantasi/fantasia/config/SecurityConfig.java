@@ -42,7 +42,10 @@ public class SecurityConfig {
                 // --------------------------------------------------
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**", "/img/**", "/login").permitAll()
-                        .requestMatchers("/usuarios/**", "/reportes/**").hasRole("ADMINISTRADOR")
+                        .requestMatchers("/usuarios/**", "/reportes/**", "/clientes/**", "/pedidos/**")
+                            .hasRole("ADMINISTRADOR")
+                        .requestMatchers("/ventas/**", "/productos/**", "/dashboard")
+                            .hasAnyRole("ADMINISTRADOR", "VENDEDOR")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

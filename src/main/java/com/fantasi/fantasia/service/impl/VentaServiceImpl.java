@@ -39,6 +39,16 @@ venta.setCliente(cliente);
         venta.setEstado(true); // Aseguramos que inicie activa
         venta.setDetalles(new ArrayList<>());
 
+        MetodoPago metodoPago = MetodoPago.EFECTIVO;
+        if (request.getMetodoPago() != null && !request.getMetodoPago().isBlank()) {
+            try {
+                metodoPago = MetodoPago.valueOf(request.getMetodoPago().trim().toUpperCase());
+            } catch (IllegalArgumentException ex) {
+                throw new RuntimeException("Método de pago inválido: " + request.getMetodoPago());
+            }
+        }
+        venta.setMetodoPago(metodoPago);
+
         BigDecimal totalVenta = BigDecimal.ZERO;
 
         for (DetalleVentaRequestDTO detDTO : request.getDetalles()) {

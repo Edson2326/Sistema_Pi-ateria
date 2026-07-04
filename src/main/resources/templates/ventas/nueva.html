@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security6">
 <head>
     <title>Nueva Venta - Piñatería Paraíso de la Fantasía</title>
     <link rel="icon" th:href="@{/img/LogoPinateria.png}" type="image/x-icon">
@@ -49,7 +49,8 @@
         .nav-pill { display:inline-flex; align-items:center; gap:7px; font-size:.875rem; font-weight:700; color:rgba(255,255,255,.65); padding:6px 13px; border-radius:50px; text-decoration:none; transition:background .2s,color .2s; }
         .nav-pill:hover { background:rgba(255,255,255,.13); color:#fff; }
         .nav-pill .ndot { width:26px; height:26px; border-radius:8px; background:rgba(255,255,255,.12); display:inline-flex; align-items:center; justify-content:center; font-size:12px; }
-        .nav-user { font-size:.82rem; font-weight:800; color:rgba(255,255,255,.55); display:flex; align-items:center; gap:6px; }
+        .nav-user { font-size:.82rem; font-weight:800; color:rgba(255,255,255,.55); display:flex; align-items:center; gap:6px; text-decoration:none; cursor:default; }
+        a.nav-user { cursor:pointer; }
         .nav-user i { color:var(--p400); }
         .btn-exit { font-size:.82rem; font-weight:800; background:rgba(255,255,255,.09); border:1.5px solid rgba(255,255,255,.2); color:rgba(255,255,255,.8); padding:5px 16px; border-radius:50px; cursor:pointer; transition:all .2s; }
         .btn-exit:hover { background:rgba(255,255,255,.18); border-color:rgba(255,255,255,.4); color:#fff; }
@@ -62,6 +63,15 @@
             box-shadow:0 2px 8px rgba(91,45,142,.08); transition:all .2s;
         }
         .btn-back:hover { background:var(--p100); border-color:var(--p500); color:var(--p700); transform:translateX(-3px); }
+
+        .btn-history {
+            display:inline-flex; align-items:center; gap:8px;
+            font-size:.88rem; font-weight:800; color:#fff;
+            background:linear-gradient(135deg, var(--p700), var(--p500));
+            border:none; padding:8px 20px; border-radius:50px; text-decoration:none;
+            box-shadow:0 4px 14px rgba(91,45,142,.28); transition:all .2s;
+        }
+        .btn-history:hover { transform:translateY(-2px); box-shadow:0 7px 20px rgba(91,45,142,.38); color:#fff; }
 
         .page-title { font-size:1.85rem; font-weight:900; letter-spacing:-.4px; color:var(--p900); }
         .page-sub   { font-size:.92rem; font-weight:600; color:var(--p700); opacity:.65; }
@@ -129,7 +139,33 @@
         .toggle-opt.active { background: var(--p700); color: #fff; box-shadow: 0 2px 8px rgba(91,45,142,.25); }
         .toggle-opt:not(.active):hover { background: var(--p100); }
 
-        /* Nota informativa */
+
+        .pago-toggle {
+            display: flex; gap: 8px; flex-wrap: wrap;
+        }
+        .pago-opt {
+            flex: 1; min-width: 90px; padding: .65rem .5rem; border-radius: 12px;
+            font-size: .8rem; font-weight: 800; font-family: 'Nunito', sans-serif;
+            border: 1.5px solid var(--p200); background: var(--p50); color: var(--p700);
+            cursor: pointer; transition: all .2s;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+        }
+        .pago-opt i { font-size: 1.1rem; }
+        .pago-opt:hover { border-color: var(--p500); background: var(--p100); }
+        .pago-opt.active { background: linear-gradient(135deg, var(--p700), var(--p500)); color: #fff; border-color: transparent; box-shadow: 0 4px 14px rgba(91,45,142,.3); }
+        .pago-opt[data-metodo="EFECTIVO"].active { background: linear-gradient(135deg, #15803d, #22c55e); box-shadow: 0 4px 14px rgba(21,128,61,.3); }
+        .pago-opt[data-metodo="YAPE"].active { background: linear-gradient(135deg, #6d28d9, #a855f7); box-shadow: 0 4px 14px rgba(109,40,217,.3); }
+        .pago-opt[data-metodo="PLIN"].active { background: linear-gradient(135deg, #0891b2, #06b6d4); box-shadow: 0 4px 14px rgba(8,145,178,.3); }
+
+        .pago-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: .78rem; font-weight: 800; padding: 4px 12px; border-radius: 50px;
+            color: #fff;
+        }
+        .pago-badge.EFECTIVO { background: linear-gradient(135deg, #15803d, #22c55e); }
+        .pago-badge.YAPE { background: linear-gradient(135deg, #6d28d9, #a855f7); }
+        .pago-badge.PLIN { background: linear-gradient(135deg, #0891b2, #06b6d4); }
+
         .info-note {
             display: flex; align-items: flex-start; gap: 7px;
             background: var(--p50); border: 1.5px solid var(--p200);
@@ -346,12 +382,13 @@
             <ul class="navbar-nav mx-auto gap-1 mt-3 mt-lg-0">
                 <li class="nav-item"><a class="nav-pill" th:href="@{/ventas/nueva}"><span class="ndot"><i class="fa-solid fa-cash-register"></i></span>Ventas</a></li>
                 <li class="nav-item"><a class="nav-pill" th:href="@{/productos}"><span class="ndot"><i class="fa-solid fa-box"></i></span>Inventario</a></li>
-                <li class="nav-item"><a class="nav-pill" th:href="@{/pedidos/lista}"><span class="ndot"><i class="fa-solid fa-gift"></i></span>Pedidos</a></li>
-                <li class="nav-item"><a class="nav-pill" th:href="@{/clientes}"><span class="ndot"><i class="fa-solid fa-users"></i></span>Clientes</a></li>
-                <li class="nav-item"><a class="nav-pill" th:href="@{/reportes}"><span class="ndot"><i class="fa-solid fa-chart-line"></i></span>Reportes</a></li>
+                <li class="nav-item" sec:authorize="hasRole('ADMINISTRADOR')"><a class="nav-pill" th:href="@{/pedidos/lista}"><span class="ndot"><i class="fa-solid fa-gift"></i></span>Pedidos</a></li>
+                <li class="nav-item" sec:authorize="hasRole('ADMINISTRADOR')"><a class="nav-pill" th:href="@{/clientes}"><span class="ndot"><i class="fa-solid fa-users"></i></span>Clientes</a></li>
+                <li class="nav-item" sec:authorize="hasRole('ADMINISTRADOR')"><a class="nav-pill" th:href="@{/reportes}"><span class="ndot"><i class="fa-solid fa-chart-line"></i></span>Reportes</a></li>
             </ul>
             <div class="d-flex align-items-center gap-3 mt-3 mt-lg-0">
-                <span class="nav-user"><i class="fa-solid fa-circle-user"></i> Admin</span>
+                <a class="nav-user" th:href="@{/usuarios}" sec:authorize="hasRole('ADMINISTRADOR')" title="Gestionar usuarios"><i class="fa-solid fa-user-gear"></i> <span sec:authentication="name">Admin</span></a>
+                <span class="nav-user" sec:authorize="hasRole('VENDEDOR')"><i class="fa-solid fa-circle-user"></i> <span sec:authentication="name">Empleado</span></span>
                 <form th:action="@{/logout}" method="post" class="m-0">
                     <button type="submit" class="btn-exit">Salir <i class="fa-solid fa-arrow-right-from-bracket ms-1"></i></button>
                 </form>
@@ -362,9 +399,12 @@
 
 <div class="container">
 
-    <div class="mb-3">
+    <div class="mb-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
         <a th:href="@{/dashboard}" class="btn-back">
             <i class="fa-solid fa-arrow-left-long"></i> Volver al Menú Principal
+        </a>
+        <a th:href="@{/ventas/lista}" class="btn-history">
+            <i class="fa-solid fa-clock-rotate-left"></i> Ver Registro de Ventas
         </a>
     </div>
 
@@ -453,6 +493,24 @@
                                 <i class="fa-solid fa-plus me-1"></i> Añadir
                             </button>
                         </div>
+                    </div>
+
+                    <hr class="step-divider">
+                    <div class="step-row">
+                        <span class="step-num">3</span>
+                        <span class="step-title">Método de Pago</span>
+                    </div>
+
+                    <div class="pago-toggle">
+                        <button type="button" class="pago-opt active" data-metodo="EFECTIVO" onclick="setMetodoPago('EFECTIVO', this)">
+                            <i class="fa-solid fa-money-bill-wave"></i> Efectivo
+                        </button>
+                        <button type="button" class="pago-opt" data-metodo="YAPE" onclick="setMetodoPago('YAPE', this)">
+                            <i class="fa-solid fa-mobile-screen-button"></i> Yape
+                        </button>
+                        <button type="button" class="pago-opt" data-metodo="PLIN" onclick="setMetodoPago('PLIN', this)">
+                            <i class="fa-solid fa-qrcode"></i> Plin
+                        </button>
                     </div>
 
                 </div>
@@ -554,6 +612,10 @@
                         <span class="rm-label">Cliente</span>
                         <span class="rm-value" id="boletaCliente">—</span>
                     </div>
+                    <div class="rm-row">
+                        <span class="rm-label">Método de Pago</span>
+                        <span class="rm-value" id="boletaMetodoPago">—</span>
+                    </div>
                 </div>
 
                 <hr class="receipt-dashed">
@@ -602,6 +664,13 @@
 
     let carrito = [];
     let modoCliente = 'registrado';
+    let metodoPago = 'EFECTIVO';
+
+    function setMetodoPago(metodo, btn) {
+        metodoPago = metodo;
+        document.querySelectorAll('.pago-opt').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
 
     function setClienteMode(modo) {
         modoCliente = modo;
@@ -730,6 +799,7 @@
 
         const payload = {
             idCliente: idCliente ? parseInt(idCliente) : null,
+            metodoPago: metodoPago,
             detalles: carrito.map(p => ({
                 idProducto: parseInt(p.id),
                 cantidad:   p.cantidad
@@ -776,6 +846,9 @@
 
         document.getElementById('boletaCliente').textContent = nombreCliente;
 
+        const iconos = { EFECTIVO: '💵 Efectivo', YAPE: '📱 Yape', PLIN: '🔵 Plin' };
+        document.getElementById('boletaMetodoPago').textContent = iconos[metodoPago] || metodoPago;
+
         let total = 0;
         let rows  = '';
         carrito.forEach(p => {
@@ -811,4 +884,3 @@
 </script>
 </body>
 </html>
-

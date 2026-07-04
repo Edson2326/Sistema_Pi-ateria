@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security6">
 <div th:fragment="navbar">
     <link rel="stylesheet" th:href="@{/css/global.css}">
     <style>
@@ -41,13 +41,13 @@
                         <a class="nav-link px-3" th:href="@{/productos}"><i class="fa-solid fa-box text-orange"></i> Inventario</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link px-3" th:href="@{/pedidos/lista}"><i class="fa-solid fa-gift text-purple"></i> Pedidos</a>
+                        <a class="nav-link px-3" th:href="@{/pedidos/lista}" sec:authorize="hasRole('ADMINISTRADOR')"><i class="fa-solid fa-gift text-purple"></i> Pedidos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link px-3" th:href="@{/clientes/lista}"><i class="fa-solid fa-users text-pink"></i> Clientes</a>
+                        <a class="nav-link px-3" th:href="@{/clientes/lista}" sec:authorize="hasRole('ADMINISTRADOR')"><i class="fa-solid fa-users text-pink"></i> Clientes</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link px-3" th:href="@{/reportes}"><i class="fa-solid fa-chart-line text-success"></i> Reportes</a>
+                        <a class="nav-link px-3" th:href="@{/reportes}" sec:authorize="hasRole('ADMINISTRADOR')"><i class="fa-solid fa-chart-line text-success"></i> Reportes</a>
                     </li>
                 </ul>
 
@@ -57,13 +57,15 @@
                         <i class="fa-solid fa-moon"></i>
                     </button>
 
-                    <span class="pill-badge-nav bg-purple-soft text-purple">
-    <i class="fa-solid fa-user-circle me-1"></i> Admin
-</span>
+                    <a th:href="@{/usuarios}" class="pill-badge-nav bg-purple-soft text-purple" style="text-decoration:none;cursor:pointer" sec:authorize="hasRole('ADMINISTRADOR')" title="Gestionar usuarios">
+                        <i class="fa-solid fa-user-gear me-1"></i> <span sec:authentication="name">Admin</span>
+                    </a>
+                    <span class="pill-badge-nav bg-purple-soft text-purple" sec:authorize="hasRole('VENDEDOR')">
+                        <i class="fa-solid fa-user-circle me-1"></i> <span sec:authentication="name">Empleado</span>
+                    </span>
                 </div>
             </div>
         </div>
     </nav>
 </div>
 </html>
-

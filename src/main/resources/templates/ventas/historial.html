@@ -16,6 +16,10 @@
         .btn-outline-purple { border: 1px solid #6c5ce7; color: #6c5ce7; }
         .btn-outline-purple:hover { background: #6c5ce7; color: #fff; }
         .table-container { overflow-x: auto; }
+        .pago-badge { display:inline-flex; align-items:center; gap:6px; font-size:.78rem; font-weight:800; padding:4px 12px; border-radius:50px; color:#fff; white-space:nowrap; }
+        .pago-badge.EFECTIVO { background: linear-gradient(135deg, #15803d, #22c55e); }
+        .pago-badge.YAPE { background: linear-gradient(135deg, #6d28d9, #a855f7); }
+        .pago-badge.PLIN { background: linear-gradient(135deg, #0891b2, #06b6d4); }
     </style>
 </head>
 <body>
@@ -46,12 +50,17 @@
         <div class="table-container">
             <table class="table table-hover align-middle">
                 <thead>
-                <tr><th>Fecha</th><th>Cliente</th><th>Total</th><th class="text-center">Acciones</th></tr>
+                <tr><th>Fecha</th><th>Cliente</th><th>Método de Pago</th><th>Total</th><th class="text-center">Acciones</th></tr>
                 </thead>
                 <tbody>
                 <tr th:each="venta : ${listaVentas}">
                     <td th:text="${#temporals.format(venta.fechaVenta, 'dd/MM/yyyy')}"></td>
-                    <td th:text="${venta.cliente.nombre}"></td>
+                    <td th:text="${venta.cliente != null ? venta.cliente.nombre : 'Cliente no registrado'}"></td>
+                    <td>
+                        <span class="pago-badge" th:classappend="${venta.metodoPago}"
+                              th:text="${venta.metodoPago == T(com.fantasi.fantasia.entity.MetodoPago).YAPE ? '📱 Yape' : (venta.metodoPago == T(com.fantasi.fantasia.entity.MetodoPago).PLIN ? '🔵 Plin' : '💵 Efectivo')}">
+                        </span>
+                    </td>
                     <td class="text-cyan fw-bold">S/. <span th:text="${#numbers.formatDecimal(venta.total, 1, 'COMMA', 2, 'POINT')}"></span></td>
                     <td class="text-center">
                         <a th:href="@{/ventas/detalle/{id}(id=${venta.id})}" class="btn btn-sm btn-outline-purple rounded-pill me-1">
@@ -96,4 +105,3 @@
 </script>
 </body>
 </html>
-
