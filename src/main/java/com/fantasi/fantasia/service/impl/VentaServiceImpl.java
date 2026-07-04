@@ -86,6 +86,7 @@ venta.setCliente(cliente);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Venta buscar(Long id) {
         return ventaRepo.findById(id).orElse(null);
     }

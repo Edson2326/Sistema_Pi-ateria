@@ -44,6 +44,15 @@ public class VentaController {
         return "ventas/nueva";
     }
 
+    @GetMapping("/detalle/{id}")
+    public String detalleVenta(@PathVariable Long id, Model model) {
+        Venta venta = ventaService.buscar(id);
+        if (venta == null) {
+            return "redirect:/ventas/lista";
+        }
+        model.addAttribute("venta", venta);
+        return "ventas/detalle";
+    }
 
     /**
      * Muestra el historial con el listado de todas las ventas
