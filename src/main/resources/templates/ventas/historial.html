@@ -67,7 +67,7 @@
                             <i class="fa-solid fa-eye"></i>
                         </a>
                         <button type="button" class="btn btn-sm btn-outline-danger rounded-pill btn-eliminar-venta"
-                                th:data-id="${venta.id}" th:data-cliente="${venta.cliente.nombre}">
+                                th:data-id="${venta.id}" th:data-cliente="${venta.cliente != null ? venta.cliente.nombre : 'Cliente no registrado'}">
                             <i class="fa-solid fa-trash"></i>
                         </button>
                         <form th:id="'deleteFormVenta' + ${venta.id}" th:action="@{/ventas/eliminar/{id}(id=${venta.id})}" method="post" style="display:none;"></form>
